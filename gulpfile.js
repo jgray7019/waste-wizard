@@ -1,10 +1,11 @@
-const gulp = require('gulp');
+
 const sass = require('gulp-sass');
 const concat = require('gulp-concat');
 const babel = require('gulp-babel');
 const plumber = require('gulp-plumber');
 const imagemin = require('gulp-imagemin');
 const browserSync = require('browser-sync');
+const gulp = require('gulp');
 const reload = browserSync.reload;
 
 // task to compile sass
@@ -23,6 +24,13 @@ gulp.task('scripts', function() {
                     presets: ['es2015']
                 }))
                 .pipe( gulp.dest('./public/scripts/') )
+                .pipe(reload({stream: true}));;
+});
+
+// move json to public
+gulp.task('data', function() {
+    return gulp .src('./dev/data/**/*')
+                .pipe( gulp.dest('./public/data/') )
                 .pipe(reload({stream: true}));;
 });
 
@@ -62,8 +70,9 @@ gulp.task('watch', function() {
     gulp.watch('./dev/styles/**/*.scss', ['styles']);
     gulp.watch('./dev/scripts/main.js', ['scripts']);
     gulp.watch('./dev/assets/**/*', ['assets']);
+    gulp.watch('./dev/data/**/*', ['data']);
     gulp.watch('*.html', reload);
 });
 
 // default task
-gulp.task('default', ['browser-sync', 'assets', 'styles', 'scripts', 'watch']);
+gulp.task('default', ['browser-sync', 'assets', 'styles', 'scripts', 'data', 'watch']);
